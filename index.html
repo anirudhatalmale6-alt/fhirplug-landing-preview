@@ -123,6 +123,20 @@
   .cap-card.blue .cap-list svg{color:var(--teal);}
   .cap-card.green .cap-list svg{color:var(--green);}
 
+  /* ---------- PA DEMO BAND ---------- */
+  .demo-band{background:var(--teal-ink);border-radius:26px;padding:52px;display:grid;grid-template-columns:1.15fr 0.85fr;gap:48px;align-items:center;}
+  @media (max-width:860px){ .demo-band{grid-template-columns:1fr;gap:34px;padding:34px;} }
+  .demo-band .eyebrow{color:#7FD6A0;}
+  .demo-band .eyebrow::before{background:#7FD6A0;box-shadow:0 0 0 3px rgba(127,214,160,.22);}
+  .demo-band h2{font-family:'Fraunces',serif;font-weight:600;font-size:29px;line-height:1.12;color:#fff;margin:14px 0 0;}
+  .demo-band p{color:rgba(255,255,255,.74);font-size:16px;line-height:1.6;margin-top:14px;max-width:520px;}
+  .demo-band .btn-launch{margin-top:26px;background:var(--amber);color:#fff;border:none;}
+  .demo-band .btn-launch:hover{background:#c9691f;box-shadow:0 8px 20px rgba(226,121,45,.34);}
+  .demo-steps{display:flex;flex-direction:column;gap:12px;}
+  .demo-step{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 18px;}
+  .demo-step .n{width:30px;height:30px;flex:none;border-radius:50%;background:rgba(127,214,160,.16);color:#7FD6A0;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;}
+  .demo-step span{font-size:14.5px;color:#fff;font-weight:500;}
+
   /* ---------- SECURITY / DEPLOYMENT ---------- */
   .sub-h{font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin:0 0 20px;}
   .deploy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
@@ -314,6 +328,26 @@
             <div class="arrow">→</div>
             <div class="compare-after">Scored and logged <b>automatically</b></div>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PA RESPONSE MANAGEMENT DEMO -->
+  <section id="demo">
+    <div class="wrap">
+      <div class="demo-band">
+        <div class="demo-copy">
+          <span class="eyebrow">Interactive demo</span>
+          <h2>Prior Authorization Response Management Demo</h2>
+          <p>Complete each step to build and submit a cost-saving FHIR Prior Authorization decision workflow in our demo EMR/EHR.</p>
+          <a class="btn btn-launch btn-lg" href="https://fhirplug.com/portal">Launch the demo →</a>
+        </div>
+        <div class="demo-steps">
+          <div class="demo-step"><span class="n">1</span><span>Open the incoming prior authorization request</span></div>
+          <div class="demo-step"><span class="n">2</span><span>Apply coverage &amp; utilization management rules</span></div>
+          <div class="demo-step"><span class="n">3</span><span>Build the FHIR Da Vinci PAS decision</span></div>
+          <div class="demo-step"><span class="n">4</span><span>Submit and generate the response letter</span></div>
         </div>
       </div>
     </div>
