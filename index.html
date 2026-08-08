@@ -1,166 +1,469 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>FhirPlug | Plug Into Healthcare Innovation</title>
-<meta name="description" content="Get a focused CMS-0057-F Prior Authorization Readiness Assessment. Understand where you stand, what needs to change, and what to prioritize before implementation deadlines.">
+<meta name="description" content="Get a focused CMS-0057-F Prior Authorization Readiness Assessment. See where you stand, what to fix, and prove compliance with a live operations dashboard." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --cream:#FAFAF7;
-    --blue:#2B5CB8;
-    --blue-dark:#224a94;
-    --emerald:#3E8C5A;
-    --emerald-dark:#357a4e;
+    --bg:#FAFAF7;
+    --surface:#FFFFFF;
+    --surface-2:#F0F4F1;
+    --teal:#154D57;
+    --teal-ink:#0E373F;
+    --teal-soft:#E4EEF0;
+    --green:#3E8C5A;
+    --green-dark:#357a4e;
+    --green-soft:#E7F3EA;
     --amber:#E2792D;
-    --ink:#13303B;
-    --ink-soft:#26414b;
-    --body:#5c6a70;
-    --line:#e8e7df;
-    --card-shadow:0 18px 45px -20px rgba(19,48,59,.28);
+    --ink:#12241D;
+    --ink-soft:#57685F;
+    --ink-faint:#8A9791;
+    --line:#E1E4DF;
+    --radius:18px;
+    --wrap:1280px;
+    --card-shadow:0 18px 45px -20px rgba(18,36,29,.28);
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    font-family:'Inter',system-ui,sans-serif;
-    background:var(--cream);
-    color:var(--ink);
-    -webkit-font-smoothing:antialiased;
-    line-height:1.5;
-  }
-  .wrap{max-width:1240px;margin:0 auto;padding:0 40px}
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5;}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;margin:0;color:var(--teal-ink);}
+  p{margin:0;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 40px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--green);display:inline-flex;align-items:center;gap:9px;font-weight:600;}
+  .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px var(--green-soft);}
+  section{padding:92px 0;}
+  @media (max-width:720px){ section{padding:60px 0;} .wrap{padding:0 22px;} }
+
+  /* ---------- BUTTONS ---------- */
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:13px 24px;border-radius:999px;font-size:15px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:transform .15s ease, box-shadow .15s ease, background .15s ease;font-family:'Inter',sans-serif;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--teal);color:#fff;box-shadow:0 1px 2px rgba(18,36,29,0.12);}
+  .btn-primary:hover{background:var(--teal-ink);box-shadow:0 6px 16px rgba(21,77,87,0.28);}
+  .btn-ghost{background:transparent;color:var(--teal-ink);border-color:var(--line);}
+  .btn-ghost:hover{border-color:var(--teal);background:var(--teal-soft);}
+  .btn-lg{padding:15px 28px;font-size:16px;}
 
   /* ---------- NAV ---------- */
-  nav{padding:26px 0 10px}
-  .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
-  .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-  .brand .flame{width:34px;height:34px;flex:none}
-  .brand .word{font-family:'Fraunces',serif;font-weight:700;font-size:27px;color:var(--ink);letter-spacing:-.5px}
-  .nav-links{display:flex;align-items:center;gap:34px}
-  .nav-links a{font-size:15.5px;color:#465158;text-decoration:none;font-weight:500}
-  .nav-links a:hover{color:var(--ink)}
-  .nav-actions{display:flex;align-items:center;gap:14px}
-  .btn{display:inline-flex;align-items:center;gap:9px;font-family:'Inter';font-weight:600;font-size:15.5px;border-radius:40px;padding:12px 24px;cursor:pointer;text-decoration:none;border:1.5px solid transparent;transition:.15s}
-  .btn-ghost{background:transparent;color:var(--ink);border-color:#d6d6cc}
-  .btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
-  .btn-blue{background:var(--blue);color:#fff}
-  .btn-blue:hover{background:var(--blue-dark)}
-  .btn-lg{padding:16px 30px;font-size:16.5px}
+  header{position:sticky;top:0;z-index:50;background:rgba(250,250,247,0.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;max-width:var(--wrap);margin:0 auto;}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:700;font-size:22px;color:var(--teal-ink);}
+  .brand .flame{width:30px;height:30px;flex:none;}
+  .navlinks{display:none;align-items:center;gap:34px;font-size:15px;color:var(--ink-soft);font-weight:500;}
+  .navlinks a:hover{color:var(--teal-ink);}
+  .nav-actions{display:flex;gap:12px;align-items:center;}
+  .nav-cta{display:none;}
+  @media (min-width:880px){ .navlinks{display:flex;} .nav-cta{display:inline-flex;} }
 
   /* ---------- HERO ---------- */
-  .hero{display:grid;grid-template-columns:1.02fr .98fr;gap:56px;align-items:center;padding:38px 0 70px}
-  .eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;letter-spacing:1.5px;color:var(--blue);text-transform:uppercase;margin-bottom:24px}
-  .eyebrow .dot{width:11px;height:11px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px rgba(43,92,184,.16)}
-  h1{font-family:'Fraunces',serif;font-weight:600;font-size:58px;line-height:1.04;letter-spacing:-1px;color:var(--ink)}
-  .subhead{font-family:'Fraunces',serif;font-weight:500;font-size:25px;line-height:1.28;color:var(--emerald);margin-top:20px;max-width:540px}
-  .lead{font-size:18px;color:var(--body);margin-top:22px;max-width:540px}
-  .lead strong{color:var(--ink-soft);font-weight:600}
-  .cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
-  .checks{margin-top:32px;display:flex;flex-direction:column;gap:12px}
-  .check{display:flex;align-items:flex-start;gap:11px;font-size:15.5px;color:var(--ink-soft);font-weight:500}
-  .check svg{flex:none;margin-top:1px}
-  .deliverable{margin-top:16px;display:inline-flex;align-items:center;gap:10px;background:rgba(62,140,90,.10);border:1px solid rgba(62,140,90,.28);color:var(--emerald-dark);font-weight:600;font-size:15px;padding:11px 18px;border-radius:12px}
-  .deliverable .arrow{font-weight:700}
+  .hero{padding-top:70px;padding-bottom:34px;}
+  .hero-grid{display:grid;grid-template-columns:1.04fr 0.96fr;gap:60px;align-items:center;}
+  @media (max-width:940px){ .hero-grid{grid-template-columns:1fr;gap:44px;} }
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(36px,4.4vw,58px);line-height:1.04;margin:22px 0 0;color:var(--teal-ink);}
+  .hero .subhead{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(20px,2vw,25px);line-height:1.28;color:var(--green);margin-top:18px;max-width:560px;}
+  .hero .lead{font-size:17.5px;color:var(--ink-soft);margin-top:20px;max-width:560px;line-height:1.62;}
+  .hero .lead strong{color:var(--teal-ink);font-weight:600;}
+  .hero-actions{display:flex;gap:14px;margin-top:32px;flex-wrap:wrap;}
+  .checks{margin-top:30px;display:flex;flex-direction:column;gap:11px;}
+  .check{display:flex;align-items:flex-start;gap:11px;font-size:15px;color:var(--ink);font-weight:500;}
+  .check .dbl{flex:none;margin-top:1px;}
+  .deliverable{margin-top:16px;display:inline-flex;align-items:center;gap:10px;background:var(--green-soft);border:1px solid rgba(62,140,90,.30);color:var(--green-dark);font-weight:600;font-size:14.5px;padding:11px 18px;border-radius:12px;}
 
-  /* ---------- HERO IMAGE ---------- */
-  .shot{position:relative;width:100%;aspect-ratio:740/722;border-radius:22px;overflow:hidden;box-shadow:0 40px 80px -40px rgba(19,48,59,.45)}
-  .shot img{width:100%;height:100%;object-fit:cover;display:block}
-  .badge{position:absolute;background:#fff;border-radius:16px;box-shadow:var(--card-shadow);display:flex;align-items:center}
-  .badge-approve{left:1.1%;top:38.5%;min-width:47.5%;min-height:13.1%;gap:14px;padding:16px 22px 16px 18px}
-  .badge-approve .ico{width:38px;height:38px;flex:none;border-radius:50%;background:var(--emerald);display:flex;align-items:center;justify-content:center}
-  .badge-approve .txt b{display:block;font-size:16px;color:var(--ink);font-weight:700;line-height:1.15}
-  .badge-approve .txt span{display:block;font-size:13.5px;color:var(--body);margin-top:2px}
-  .badge-time{right:22.9%;top:69%;min-width:28.2%;min-height:23.3%;flex-direction:column;justify-content:center;text-align:center;padding:16px 22px}
-  .badge-time .clock{width:40px;height:40px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto 6px}
-  .badge-time .big{font-family:'Fraunces',serif;font-weight:700;font-size:27px;color:var(--blue);line-height:1;white-space:nowrap}
-  .badge-time .sub{font-size:12.5px;color:var(--body);margin-top:6px;line-height:1.25}
+  /* hero photo + badges */
+  .shot{position:relative;width:100%;aspect-ratio:740/722;border-radius:22px;overflow:hidden;box-shadow:0 40px 80px -40px rgba(18,36,29,.45);}
+  .shot img{width:100%;height:100%;object-fit:cover;display:block;}
+  .badge{position:absolute;background:#fff;border-radius:16px;box-shadow:var(--card-shadow);display:flex;align-items:center;}
+  .badge-approve{left:1.1%;top:38.5%;min-width:47.5%;min-height:13.1%;gap:14px;padding:16px 22px 16px 18px;}
+  .badge-approve .ico{width:38px;height:38px;flex:none;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;}
+  .badge-approve .txt b{display:block;font-size:16px;color:var(--teal-ink);font-weight:700;line-height:1.15;}
+  .badge-approve .txt span{display:block;font-size:13.5px;color:var(--ink-soft);margin-top:2px;}
+  .badge-time{right:22.9%;top:69%;min-width:28.2%;min-height:23.3%;flex-direction:column;justify-content:center;text-align:center;padding:16px 22px;}
+  .badge-time .clock{width:40px;height:40px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;}
+  .badge-time .big{font-family:'Fraunces',serif;font-weight:700;font-size:26px;color:var(--teal);line-height:1;white-space:nowrap;}
+  .badge-time .sub{font-size:12.5px;color:var(--ink-soft);margin-top:6px;line-height:1.25;}
 
-  /* ---------- RESPONSIVE ---------- */
-  @media(max-width:960px){
-    .wrap{padding:0 24px}
-    .hero{grid-template-columns:1fr;gap:40px;padding:28px 0 56px}
-    .nav-links{display:none}
-    h1{font-size:44px}
-    .subhead{font-size:22px}
-    .shot{max-width:520px;margin:0 auto}
-  }
-  @media(max-width:520px){
-    h1{font-size:35px}
-    .badge-time .big{font-size:22px}
-    .btn-lg{padding:14px 22px;font-size:15px}
-    .nav-actions .btn-ghost{display:none}
-  }
+  /* ---------- BEFORE / AFTER ---------- */
+  .compare{background:var(--teal-ink);color:#fff;border-radius:24px;padding:46px 44px;margin-top:20px;}
+  .compare-head{max-width:560px;margin-bottom:34px;}
+  .compare-head h2{color:#fff;font-size:28px;}
+  .compare-head p{color:rgba(255,255,255,.68);margin-top:10px;font-size:15px;}
+  .compare-rows{display:flex;flex-direction:column;gap:16px;}
+  .compare-row{display:grid;grid-template-columns:190px 1fr 40px 1fr;align-items:center;gap:18px;}
+  @media (max-width:780px){ .compare-row{grid-template-columns:1fr;gap:8px;} .compare-row .arrow{display:none;} }
+  .compare-label{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:rgba(255,255,255,.55);letter-spacing:.04em;}
+  .compare-before,.compare-after{border-radius:12px;padding:16px 18px;font-size:15px;}
+  .compare-before{background:rgba(255,255,255,.07);color:rgba(255,255,255,.75);}
+  .compare-after{background:rgba(255,255,255,.97);color:var(--teal-ink);font-weight:600;}
+  .compare-after b{color:var(--green);}
+  .arrow{color:rgba(255,255,255,.4);text-align:center;}
+
+  /* ---------- CAPABILITIES ---------- */
+  .sec-head{max-width:600px;margin-bottom:40px;}
+  .sec-head h2{font-size:30px;margin-top:14px;}
+  .sec-head p{color:var(--ink-soft);margin-top:12px;font-size:15.5px;}
+  .capabilities{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  @media (max-width:820px){ .capabilities{grid-template-columns:1fr;} }
+  .cap-card{border-radius:22px;padding:38px;}
+  .cap-card.blue{background:var(--teal-soft);}
+  .cap-card.green{background:var(--green-soft);}
+  .cap-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:22px;}
+  .cap-card.blue .cap-icon{background:var(--teal);}
+  .cap-card.green .cap-icon{background:var(--green);}
+  .cap-icon svg{width:22px;height:22px;color:#fff;}
+  .cap-card h3{font-size:22px;margin-bottom:12px;}
+  .cap-card p{color:var(--ink-soft);font-size:15px;line-height:1.6;}
+  .cap-list{margin-top:20px;padding:0;display:flex;flex-direction:column;gap:10px;}
+  .cap-list li{list-style:none;display:flex;gap:10px;font-size:14.5px;color:var(--ink);}
+  .cap-list svg{width:16px;height:16px;flex:none;margin-top:2px;}
+  .cap-card.blue .cap-list svg{color:var(--teal);}
+  .cap-card.green .cap-list svg{color:var(--green);}
+
+  /* ---------- COMPLIANCE DASHBOARD ---------- */
+  #dashboard{background:var(--surface-2);}
+  .dash-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:56px;align-items:center;}
+  @media (max-width:920px){ .dash-grid{grid-template-columns:1fr;gap:40px;} }
+  .dash-copy h2{font-size:30px;margin-top:14px;}
+  .dash-copy p{color:var(--ink-soft);margin-top:14px;font-size:15.5px;max-width:480px;line-height:1.62;}
+  .dash-list{margin-top:24px;padding:0;display:flex;flex-direction:column;gap:12px;}
+  .dash-list li{list-style:none;display:flex;gap:10px;font-size:14.5px;color:var(--ink);align-items:flex-start;}
+  .dash-list svg{width:16px;height:16px;color:var(--green);margin-top:3px;flex:none;}
+  /* score card */
+  .scorecard{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:0 30px 60px -34px rgba(18,36,29,.30);}
+  .sc-top{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:20px;}
+  .sc-title{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);}
+  .sc-live{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--green-dark);font-weight:600;}
+  .sc-live .d{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px var(--green-soft);}
+  .sc-score{display:flex;align-items:baseline;gap:14px;}
+  .sc-score .num{font-family:'Fraunces',serif;font-weight:700;font-size:62px;line-height:1;color:var(--teal-ink);}
+  .sc-score .pct{font-family:'Fraunces',serif;font-weight:600;font-size:26px;color:var(--teal-ink);}
+  .sc-band{display:inline-block;margin-top:4px;background:var(--green-soft);color:var(--green-dark);font-weight:600;font-size:13px;padding:5px 12px;border-radius:999px;}
+  .sc-checks{margin-top:22px;display:flex;flex-direction:column;gap:11px;}
+  .sc-item{display:flex;align-items:center;gap:11px;font-size:14.5px;color:var(--ink);}
+  .sc-item .mk{width:22px;height:22px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;}
+  .sc-item.ok .mk{background:var(--green);}
+  .sc-item.warn .mk{background:var(--amber);}
+  .sc-item.warn{color:var(--ink-soft);}
+  .sc-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px;border-top:1px solid var(--line);padding-top:20px;}
+  .sc-kpi .k{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--ink-faint);letter-spacing:.04em;}
+  .sc-kpi .v{font-family:'Fraunces',serif;font-weight:600;font-size:20px;color:var(--teal-ink);margin-top:3px;}
+
+  /* ---------- MODULES ---------- */
+  .modules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  @media (max-width:900px){ .modules-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:620px){ .modules-grid{grid-template-columns:1fr;} }
+  .module{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px;transition:border-color .15s ease, transform .15s ease;}
+  .module:hover{border-color:var(--teal);transform:translateY(-2px);}
+  .module .m-icon{width:38px;height:38px;border-radius:10px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+  .module .m-icon svg{width:19px;height:19px;color:var(--teal);}
+  .module h4{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--teal-ink);margin:0 0 6px;}
+  .module .m-sub{font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--ink-faint);letter-spacing:.03em;margin-bottom:10px;}
+  .module p{font-size:14px;color:var(--ink-soft);line-height:1.55;}
+
+  /* ---------- FINAL CTA ---------- */
+  .cta-band{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:56px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
+  @media (max-width:860px){ .cta-band{grid-template-columns:1fr;padding:34px;} }
+  .cta-copy h2{font-size:30px;}
+  .cta-copy p{margin-top:14px;color:var(--ink-soft);font-size:15.5px;max-width:400px;}
+  .cta-list{margin-top:24px;padding:0;display:flex;flex-direction:column;gap:12px;}
+  .cta-list li{list-style:none;display:flex;gap:10px;font-size:14.5px;color:var(--ink);align-items:flex-start;}
+  .cta-list svg{width:16px;height:16px;color:var(--green);margin-top:3px;flex:none;}
+  .form-card{background:var(--surface-2);border-radius:18px;padding:28px;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+  .field label{display:block;font-size:11.5px;font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px;}
+  .field input,.field select{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:#fff;font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);}
+  .field input:focus,.field select:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:var(--teal);}
+  .form-submit{width:100%;justify-content:center;margin-top:6px;padding:13px;}
+  .form-fine{font-size:12px;color:var(--ink-faint);margin-top:12px;text-align:center;}
+
+  footer{border-top:1px solid var(--line);padding:34px 0;}
+  .foot-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  .foot-row .brand{font-size:16px;}
+  .foot-row .fine{font-size:13px;color:var(--ink-faint);}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <!-- NAV -->
-  <nav>
-    <div class="nav-inner">
-      <a class="brand" href="#">
-        <svg class="flame" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs><linearGradient id="fl" x1="10" y1="4" x2="38" y2="44" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#F3A64B"/><stop offset="1" stop-color="#E2792D"/></linearGradient></defs>
-          <path d="M26.5 3c1.2 6-2.4 9.4-5.9 12.6C16.4 19.4 12 23.2 12 30.2 12 38 18 44 25 44s13-5.7 13-13.4c0-4.3-2-7.8-4.2-10.2-.6 2.4-2 3.9-3.7 4.6 1-4.6.4-9.9-3.6-14.9-.4 3.1-1.8 4.6-3.3 5.6C21.7 8.6 24.6 5.9 26.5 3Z" fill="url(#fl)"/>
-        </svg>
-        <span class="word">FhirPlug</span>
-      </a>
-      <div class="nav-links">
-        <a href="#">Product</a>
-        <a href="#">Modules</a>
-        <a href="#">How It Works</a>
-        <a href="#">Contact</a>
-      </div>
-      <div class="nav-actions">
-        <a class="btn btn-ghost" href="#">Log in</a>
-        <a class="btn btn-blue" href="#">Request Demo</a>
-      </div>
-    </div>
-  </nav>
 
+<header>
+  <div class="nav">
+    <a class="brand" href="#top">
+      <svg class="flame" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="fl" x1="10" y1="4" x2="38" y2="44" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#F3A64B"/><stop offset="1" stop-color="#E2792D"/></linearGradient></defs>
+        <path d="M26.5 3c1.2 6-2.4 9.4-5.9 12.6C16.4 19.4 12 23.2 12 30.2 12 38 18 44 25 44s13-5.7 13-13.4c0-4.3-2-7.8-4.2-10.2-.6 2.4-2 3.9-3.7 4.6 1-4.6.4-9.9-3.6-14.9-.4 3.1-1.8 4.6-3.3 5.6C21.7 8.6 24.6 5.9 26.5 3Z" fill="url(#fl)"/>
+      </svg>
+      FhirPlug
+    </a>
+    <nav class="navlinks">
+      <a href="#capabilities">Product</a>
+      <a href="#dashboard">Compliance</a>
+      <a href="#modules">Modules</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-ghost" href="#">Log in</a>
+      <a class="btn btn-primary nav-cta" href="#contact">Request demo</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-copy">
-      <div class="eyebrow"><span class="dot"></span>FHIR R4 &nbsp;·&nbsp; DA VINCI PAS COMPLIANT</div>
-      <h1>CMS-0057-F Is Coming.<br>Are You Ready?</h1>
-      <div class="subhead">Identify Prior Authorization Gaps Before They Become Compliance Risks</div>
-      <p class="lead">Get a focused CMS-0057-F Prior Authorization Readiness Assessment designed to evaluate your current technology, workflows, FHIR capabilities, utilization management integrations, and operational readiness. <strong>Understand where you stand, what needs to change, and what to prioritize</strong> before implementation deadlines put pressure on your organization.</p>
-
-      <div class="cta-row">
-        <a class="btn btn-blue btn-lg" href="https://anirudhatalmale6-alt.github.io/cms0057-readiness-assessment/">Get Your Readiness Score
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-        <a class="btn btn-ghost btn-lg" href="#">Request Sandbox Access</a>
-      </div>
-
-      <div class="checks">
-        <div class="check"><svg width="20" height="14" viewBox="0 0 26 16" fill="none"><path d="M2 8.5 6.5 13 15 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 8.5 15.5 13 24 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Da Vinci FHIR PAS Readiness</div>
-        <div class="check"><svg width="20" height="14" viewBox="0 0 26 16" fill="none"><path d="M2 8.5 6.5 13 15 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 8.5 15.5 13 24 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Utilization Management Integration</div>
-        <div class="check"><svg width="20" height="14" viewBox="0 0 26 16" fill="none"><path d="M2 8.5 6.5 13 15 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 8.5 15.5 13 24 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Prior Authorization API &amp; Workflow Review</div>
-        <div class="check"><svg width="20" height="14" viewBox="0 0 26 16" fill="none"><path d="M2 8.5 6.5 13 15 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 8.5 15.5 13 24 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>DTR / CRD / Clinical Data Exchange Assessment</div>
-      </div>
-      <div class="deliverable"><span class="arrow">→</span>CMS-0057-F Gap Analysis &amp; Remediation Roadmap</div>
-    </div>
-
-    <!-- HERO IMAGE -->
-    <div class="hero-visual">
-      <div class="shot">
-        <img src="hero.jpg" alt="Practice manager reviewing a prior authorization decision on a tablet">
-        <div class="badge badge-approve">
-          <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17.5 19.5 6.5" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <div class="txt"><b>Know your readiness.</b><span>Plan with confidence.</span></div>
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">FHIR R4 · Da Vinci PAS compliant</span>
+          <h1>CMS-0057-F Is Coming.<br>Are You Ready?</h1>
+          <div class="subhead">Identify Prior Authorization Gaps Before They Become Compliance Risks</div>
+          <p class="lead">Get a focused CMS-0057-F Prior Authorization Readiness Assessment designed to evaluate your current technology, workflows, FHIR capabilities, utilization management integrations, and operational readiness. <strong>Understand where you stand, what needs to change, and what to prioritize</strong> before implementation deadlines put pressure on your organization.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="https://anirudhatalmale6-alt.github.io/cms0057-readiness-assessment/">Get Your Readiness Score
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <a class="btn btn-ghost btn-lg" href="#contact">Request Sandbox Access</a>
+          </div>
+          <div class="checks">
+            <div class="check"><svg class="dbl" width="20" height="14" viewBox="0 0 26 16" fill="none"><path d="M2 8.5 6.5 13 15 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 8.5 15.5 13 24 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Da Vinci FHIR PAS Readiness</div>
+            <div class="check"><svg class="dbl" width="20" height="14" viewBox="0 0 26 16" fill="none"><path d="M2 8.5 6.5 13 15 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 8.5 15.5 13 24 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Utilization Management Integration</div>
+            <div class="check"><svg class="dbl" width="20" height="14" viewBox="0 0 26 16" fill="none"><path d="M2 8.5 6.5 13 15 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 8.5 15.5 13 24 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Prior Authorization API &amp; Workflow Review</div>
+            <div class="check"><svg class="dbl" width="20" height="14" viewBox="0 0 26 16" fill="none"><path d="M2 8.5 6.5 13 15 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 8.5 15.5 13 24 3.5" stroke="#3E8C5A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>DTR / CRD / Clinical Data Exchange Assessment</div>
+          </div>
+          <div class="deliverable"><span>→</span>CMS-0057-F Gap Analysis &amp; Remediation Roadmap</div>
         </div>
-        <div class="badge badge-time">
-          <div class="clock"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12.5" r="8" stroke="#fff" stroke-width="2"/><path d="M12 8.5v4.2l2.6 1.6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <div class="big">20 mins or less</div>
-          <div class="sub">Fast. Actionable. No obligation.</div>
+
+        <div class="hero-visual">
+          <div class="shot">
+            <img src="hero.jpg" alt="Practice manager reviewing a prior authorization decision on a tablet">
+            <div class="badge badge-approve">
+              <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17.5 19.5 6.5" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="txt"><b>Know your readiness.</b><span>Plan with confidence.</span></div>
+            </div>
+            <div class="badge badge-time">
+              <div class="clock"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12.5" r="8" stroke="#fff" stroke-width="2"/><path d="M12 8.5v4.2l2.6 1.6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="big">20 mins or less</div>
+              <div class="sub">Fast. Actionable. No obligation.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BEFORE / AFTER -->
+      <div class="compare" id="proof">
+        <div class="compare-head">
+          <span class="eyebrow" style="color:#9FE0BC;">What actually changes</span>
+          <h2>The same request, two different Tuesdays.</h2>
+          <p>What your intake and utilization teams feel from the first week live.</p>
+        </div>
+        <div class="compare-rows">
+          <div class="compare-row">
+            <div class="compare-label">Request submission</div>
+            <div class="compare-before">Fax, then a call to confirm it arrived</div>
+            <div class="arrow">→</div>
+            <div class="compare-after">Submitted from the EMR in <b>one click</b></div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-label">Decision time</div>
+            <div class="compare-before">Days of back-and-forth</div>
+            <div class="arrow">→</div>
+            <div class="compare-after">Returned in <b>seconds</b>, most cases</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-label">Staff time per case</div>
+            <div class="compare-before">Manual follow-up calls and re-keying</div>
+            <div class="arrow">→</div>
+            <div class="compare-after">Near <b>zero</b> manual follow-up</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-label">Compliance evidence</div>
+            <div class="compare-before">Pulled together by hand before an audit</div>
+            <div class="arrow">→</div>
+            <div class="compare-after">Scored and logged <b>automatically</b></div>
+          </div>
         </div>
       </div>
     </div>
   </section>
-</div>
+
+  <!-- CAPABILITIES -->
+  <section id="capabilities">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">How it works</span>
+        <h2>One connection, two jobs.</h2>
+        <p>FhirPlug looks after the people on both ends of the request, and keeps the process itself airtight.</p>
+      </div>
+      <div class="capabilities">
+        <div class="cap-card blue">
+          <div class="cap-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 21s-7-4.5-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.5-9 9-9 9z"/></svg></div>
+          <h3>Looks after the people</h3>
+          <p>Every request carries the context clinicians and reviewers actually need — coverage status, documentation gaps, patient history — so no one is left guessing or waiting on hold.</p>
+          <ul class="cap-list">
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>Real-time coverage checks before you order</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>Documentation requirements surfaced up front</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>Decisions delivered to the EMR, fax, or portal</li>
+          </ul>
+        </div>
+        <div class="cap-card green">
+          <div class="cap-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 10h16M10 10v10"/></svg></div>
+          <h3>Keeps everything in order</h3>
+          <p>Every submission, decision, and document is logged, versioned, and auditable — so CMS-0057-F compliance is a byproduct of using the system, not a separate project.</p>
+          <ul class="cap-list">
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>FHIR R4 / Da Vinci PAS native, out of the box</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>Full audit trail on every decision</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>Live CMS-0057-F compliance scoring</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLIANCE DASHBOARD -->
+  <section id="dashboard">
+    <div class="wrap">
+      <div class="dash-grid">
+        <div class="dash-copy">
+          <span class="eyebrow">Compliance, built in</span>
+          <h2>Give your payers the evidence, not just the outcome.</h2>
+          <p>Every submission, decision, and delivery is scored against CMS-0057-F in real time. Your compliance and utilization-management leaders see exactly where they stand — and where to act — long before an auditor ever asks.</p>
+          <ul class="dash-list">
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>A single CMS-0057-F Compliance Score with an at-a-glance checklist</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>Prior authorization performance and SLA compliance — 72-hour urgent, 7-day standard</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>CMS API performance across PAS, CRD, DTR and CDex — uptime, response times, retries</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>An audit-ready trail on every decision, letter, and delivery</li>
+          </ul>
+          <div class="hero-actions" style="margin-top:30px;">
+            <a class="btn btn-primary" href="#contact">See the dashboard</a>
+          </div>
+        </div>
+        <div class="scorecard">
+          <div class="sc-top">
+            <div class="sc-title">CMS-0057-F Compliance</div>
+            <div class="sc-live"><span class="d"></span>Live</div>
+          </div>
+          <div class="sc-score"><span class="num">93</span><span class="pct">%</span>
+            <span class="sc-band">Mostly ready</span>
+          </div>
+          <div class="sc-checks">
+            <div class="sc-item ok"><span class="mk"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17.5 19.5 6.5" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Decision turnaround</div>
+            <div class="sc-item ok"><span class="mk"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17.5 19.5 6.5" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>FHIR response compliance</div>
+            <div class="sc-item ok"><span class="mk"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17.5 19.5 6.5" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Provider notifications</div>
+            <div class="sc-item warn"><span class="mk"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 7v6M12 16.5v.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></span>Documentation requests</div>
+            <div class="sc-item warn"><span class="mk"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 7v6M12 16.5v.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></span>Appeal response times</div>
+          </div>
+          <div class="sc-kpis">
+            <div class="sc-kpi"><div class="k">Auto-decision</div><div class="v">68.7%</div></div>
+            <div class="sc-kpi"><div class="k">Median turn</div><div class="v">3m 42s</div></div>
+            <div class="sc-kpi"><div class="k">Delivery</div><div class="v">97.8%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULES -->
+  <section id="modules">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Under the hood</span>
+        <h2>Six modules. Pick what you need.</h2>
+        <p>Built on an open FHIR API, so you can run the full workflow or plug in only the piece that's slowing you down today.</p>
+      </div>
+      <div class="modules-grid">
+        <div class="module">
+          <div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+          <h4>FHIR Orchestrator</h4>
+          <div class="m-sub">Routing &amp; transformation</div>
+          <p>The central hub that routes and translates FHIR R4 resources between payers, providers, and health systems.</p>
+        </div>
+        <div class="module">
+          <div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
+          <h4>Prior Authorization Connect</h4>
+          <div class="m-sub">Submission &amp; delivery</div>
+          <p>Automates Da Vinci PAS submissions and delivers decisions by fax, EMR Direct, or patient portal — whichever the payer needs.</p>
+        </div>
+        <div class="module">
+          <div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v4M16 3v4M4 9h16M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg></div>
+          <h4>Documentation Templates</h4>
+          <div class="m-sub">Da Vinci DTR</div>
+          <p>Smart questionnaires that auto-populate from clinical data, cutting the documentation burden on your front-line staff.</p>
+        </div>
+        <div class="module">
+          <div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+          <h4>Coverage Requirements Discovery</h4>
+          <div class="m-sub">Da Vinci CRD</div>
+          <p>Checks coverage requirements at the point of order entry — before the denial happens, not after.</p>
+        </div>
+        <div class="module">
+          <div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <h4>Clinical Data Exchange</h4>
+          <div class="m-sub">Da Vinci CDex</div>
+          <p>Standardized, secure clinical data exchange between payers and providers using FHIR-based queries.</p>
+        </div>
+        <div class="module">
+          <div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14M4 19h16M8 16v-4M12 16V9M16 16v-6"/></svg></div>
+          <h4>Operations &amp; Compliance Dashboard</h4>
+          <div class="m-sub">Analytics &amp; CMS-0057-F</div>
+          <p>A live compliance score, PA performance, API health, and an audit-ready trail — the proof your payers need.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section id="contact">
+    <div class="wrap">
+      <div class="cta-band">
+        <div class="cta-copy">
+          <span class="eyebrow">Ready when you are</span>
+          <h2>See your own workflow move this fast.</h2>
+          <p>Fifteen minutes, your own use case, no slideware — we'll show it running against a live sandbox.</p>
+          <ul class="cta-list">
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>Sandbox access same day</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>FHIR R4 / Da Vinci PAS compliant from day one</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>No PHI required to evaluate — business details only</li>
+          </ul>
+        </div>
+        <div class="form-card">
+          <div class="form-row">
+            <div class="field"><label>First name</label><input type="text" placeholder="Jane" /></div>
+            <div class="field"><label>Last name</label><input type="text" placeholder="Smith" /></div>
+          </div>
+          <div class="field" style="margin-bottom:12px;"><label>Work email</label><input type="email" placeholder="jane@healthplan.com" /></div>
+          <div class="field" style="margin-bottom:12px;"><label>Organization</label><input type="text" placeholder="Your health plan or clinic" /></div>
+          <div class="field" style="margin-bottom:18px;">
+            <label>I'm interested in</label>
+            <select>
+              <option>CMS-0057-F Readiness Assessment</option>
+              <option>Sandbox access</option>
+              <option>Compliance dashboard</option>
+              <option>Full platform demo</option>
+            </select>
+          </div>
+          <button class="btn btn-primary form-submit" type="button">Request demo →</button>
+          <div class="form-fine">No patient data is ever collected on this form.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <a class="brand" href="#top">
+      <svg class="flame" viewBox="0 0 48 48" fill="none" width="22" height="22">
+        <defs><linearGradient id="fl2" x1="10" y1="4" x2="38" y2="44" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#F3A64B"/><stop offset="1" stop-color="#E2792D"/></linearGradient></defs>
+        <path d="M26.5 3c1.2 6-2.4 9.4-5.9 12.6C16.4 19.4 12 23.2 12 30.2 12 38 18 44 25 44s13-5.7 13-13.4c0-4.3-2-7.8-4.2-10.2-.6 2.4-2 3.9-3.7 4.6 1-4.6.4-9.9-3.6-14.9-.4 3.1-1.8 4.6-3.3 5.6C21.7 8.6 24.6 5.9 26.5 3Z" fill="url(#fl2)"/>
+      </svg>
+      FhirPlug
+    </a>
+    <div class="fine">© 2026 FhirPlug. Non-production demo environment — no PHI.</div>
+  </div>
+</footer>
+
 </body>
 </html>
