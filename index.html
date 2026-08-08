@@ -136,6 +136,10 @@
   .demo-step{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 18px;}
   .demo-step .n{width:30px;height:30px;flex:none;border-radius:50%;background:rgba(127,214,160,.16);color:#7FD6A0;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;}
   .demo-step span{font-size:14.5px;color:#fff;font-weight:500;}
+  /* embedded live wizard */
+  #demo{padding-top:34px;}
+  .demo-frame-wrap{border:1px solid var(--line);border-radius:24px;background:var(--surface);box-shadow:0 30px 60px -40px rgba(18,36,29,.22);overflow:hidden;}
+  .demo-frame{display:block;width:100%;height:1040px;border:0;background:transparent;}
 
   /* ---------- SECURITY / DEPLOYMENT ---------- */
   .sub-h{font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin:0 0 20px;}
@@ -508,19 +512,8 @@
   <!-- PA RESPONSE MANAGEMENT DEMO -->
   <section id="demo">
     <div class="wrap">
-      <div class="demo-band">
-        <div class="demo-copy">
-          <span class="eyebrow">Interactive demo</span>
-          <h2>Prior Authorization Response Management Demo</h2>
-          <p>Complete each step to build and submit a cost-saving FHIR Prior Authorization decision workflow in our demo EMR/EHR.</p>
-          <a class="btn btn-launch btn-lg" href="https://fhirplug.com/demo">Launch the demo →</a>
-        </div>
-        <div class="demo-steps">
-          <div class="demo-step"><span class="n">1</span><span>Patient Info</span></div>
-          <div class="demo-step"><span class="n">2</span><span>Authorization</span></div>
-          <div class="demo-step"><span class="n">3</span><span>Delivery</span></div>
-          <div class="demo-step"><span class="n">4</span><span>Results</span></div>
-        </div>
+      <div class="demo-frame-wrap">
+        <iframe id="demoFrame" class="demo-frame" src="https://fhirplug.com/demo?embed=1" title="Prior Authorization Response Management Demo" loading="lazy" scrolling="no"></iframe>
       </div>
     </div>
   </section>
@@ -577,5 +570,14 @@
   </div>
 </footer>
 
+<script>
+  // Auto-size the embedded demo wizard iframe to its content (message from /demo?embed=1)
+  window.addEventListener('message', function(e){
+    if(e && e.data && typeof e.data.fhirplugDemoHeight === 'number'){
+      var f = document.getElementById('demoFrame');
+      if(f && e.data.fhirplugDemoHeight > 200){ f.style.height = (e.data.fhirplugDemoHeight + 24) + 'px'; }
+    }
+  });
+</script>
 </body>
 </html>
