@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>FhirPlug | Plug Into Healthcare Innovation</title>
 <meta name="description" content="Get a focused CMS-0057-F Prior Authorization Readiness Assessment. See where you stand, what to fix, and prove compliance with a live operations dashboard." />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="180x180" href="favicon-180.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -53,7 +56,8 @@
   header{position:sticky;top:0;z-index:50;background:rgba(250,250,247,0.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
   .nav{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;max-width:var(--wrap);margin:0 auto;}
   .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:700;font-size:22px;color:var(--teal-ink);}
-  .brand .flame{width:30px;height:30px;flex:none;}
+  .brand .flame{width:auto;height:32px;flex:none;display:block;}
+  .foot-row .brand .flame{height:24px;}
   .navlinks{display:none;align-items:center;gap:34px;font-size:15px;color:var(--ink-soft);font-weight:500;}
   .navlinks a:hover{color:var(--teal-ink);}
   .nav-actions{display:flex;gap:12px;align-items:center;}
@@ -255,11 +259,7 @@
 <header>
   <div class="nav">
     <a class="brand" href="#top">
-      <svg class="flame" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="fl" x1="10" y1="4" x2="38" y2="44" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#F3A64B"/><stop offset="1" stop-color="#E2792D"/></linearGradient></defs>
-        <path d="M26.5 3c1.2 6-2.4 9.4-5.9 12.6C16.4 19.4 12 23.2 12 30.2 12 38 18 44 25 44s13-5.7 13-13.4c0-4.3-2-7.8-4.2-10.2-.6 2.4-2 3.9-3.7 4.6 1-4.6.4-9.9-3.6-14.9-.4 3.1-1.8 4.6-3.3 5.6C21.7 8.6 24.6 5.9 26.5 3Z" fill="url(#fl)"/>
-      </svg>
+      <img class="flame" src="fhirplug-flame.png" alt="" width="19" height="32">
       FhirPlug
     </a>
     <nav class="navlinks">
@@ -574,11 +574,7 @@
 <footer>
   <div class="wrap foot-row">
     <a class="brand" href="#top">
-      <svg class="flame" viewBox="0 0 48 48" fill="none" width="22" height="22">
-        <defs><linearGradient id="fl2" x1="10" y1="4" x2="38" y2="44" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#F3A64B"/><stop offset="1" stop-color="#E2792D"/></linearGradient></defs>
-        <path d="M26.5 3c1.2 6-2.4 9.4-5.9 12.6C16.4 19.4 12 23.2 12 30.2 12 38 18 44 25 44s13-5.7 13-13.4c0-4.3-2-7.8-4.2-10.2-.6 2.4-2 3.9-3.7 4.6 1-4.6.4-9.9-3.6-14.9-.4 3.1-1.8 4.6-3.3 5.6C21.7 8.6 24.6 5.9 26.5 3Z" fill="url(#fl2)"/>
-      </svg>
+      <img class="flame" src="fhirplug-flame.png" alt="" width="14" height="24">
       FhirPlug
     </a>
     <div class="fine">© 2026 FhirPlug. Non-production demo environment — no PHI.</div>
