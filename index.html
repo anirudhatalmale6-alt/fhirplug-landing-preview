@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>FhirPlug | Plug Into Healthcare Innovation</title>
 <meta name="description" content="Get a focused CMS-0057-F Prior Authorization Readiness Assessment. See where you stand, what to fix, and prove compliance with a live operations dashboard." />
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="180x180" href="favicon-180.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -248,6 +249,9 @@
   .field input:focus,.field select:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:var(--teal);}
   .form-submit{width:100%;justify-content:center;margin-top:6px;padding:13px;}
   .form-submit[disabled]{opacity:.65;cursor:default;}
+  /* honeypot: off-screen rather than display:none, which more bots skip */
+  .hp-field{position:absolute!important;left:-9999px!important;top:auto;width:1px;height:1px;overflow:hidden;}
+  .cf-turnstile{margin:0 0 12px;}
   .form-status{margin-top:11px;font-size:14px;line-height:1.45;display:none;}
   .form-status.show{display:block;}
   .form-status.ok{color:var(--green);font-weight:600;}
@@ -569,6 +573,11 @@
               <option>Full platform demo</option>
             </select>
           </div>
+          <div class="hp-field" aria-hidden="true">
+            <label for="lfWebsite">Website</label>
+            <input id="lfWebsite" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAADI5Y_LqYI4nbaVG" data-theme="light"></div>
           <button class="btn btn-primary form-submit" type="button" id="lfSubmit">Request demo &rarr;</button>
           <div class="form-status" id="lfStatus" role="status" aria-live="polite"></div>
           <div class="form-fine">No patient data is ever collected on this form.</div>
@@ -613,9 +622,13 @@
       var email = (document.getElementById('lfEmail').value || '').trim();
       var org   = (document.getElementById('lfOrg').value || '').trim();
       var interest = document.getElementById('lfInterest').value || '';
+      var hp = (document.getElementById('lfWebsite').value || '').trim();
+      var tsEl = document.querySelector('[name="cf-turnstile-response"]');
+      var token = tsEl ? tsEl.value : '';
 
       if(!first){ say('Please enter your first name.', 'err'); return; }
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ say('Please enter a valid work email address.', 'err'); return; }
+      if(!token){ say('Please complete the verification check just above the button, then try again.', 'err'); return; }
 
       btn.disabled = true;
       say('Sending…');
@@ -630,7 +643,9 @@
           phone: '',
           role: '',
           interest: interest,
-          source: 'Homepage - Request demo'
+          source: 'Homepage - Request demo',
+          website: hp,
+          cf_turnstile_response: token
         })
       })
       .then(function(r){ if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
@@ -641,6 +656,7 @@
       })
       .catch(function(){
         btn.disabled = false;
+        if(window.turnstile){ try{ turnstile.reset(); }catch(e){} }
         say('Sorry, that didn’t go through. Please try again in a moment.', 'err');
       });
     });
