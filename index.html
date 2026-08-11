@@ -247,6 +247,11 @@
   .field input,.field select{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:#fff;font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);}
   .field input:focus,.field select:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:var(--teal);}
   .form-submit{width:100%;justify-content:center;margin-top:6px;padding:13px;}
+  .form-submit[disabled]{opacity:.65;cursor:default;}
+  .form-status{margin-top:11px;font-size:14px;line-height:1.45;display:none;}
+  .form-status.show{display:block;}
+  .form-status.ok{color:var(--green);font-weight:600;}
+  .form-status.err{color:#B4462A;font-weight:600;}
   .form-fine{font-size:12px;color:var(--ink-faint);margin-top:12px;text-align:center;}
 
   footer{border-top:1px solid var(--line);padding:34px 0;}
@@ -550,21 +555,22 @@
         </div>
         <div class="form-card">
           <div class="form-row">
-            <div class="field"><label>First name</label><input type="text" placeholder="Jane" /></div>
-            <div class="field"><label>Last name</label><input type="text" placeholder="Smith" /></div>
+            <div class="field"><label for="lfFirst">First name</label><input id="lfFirst" name="first_name" type="text" autocomplete="given-name" placeholder="Jane" /></div>
+            <div class="field"><label for="lfLast">Last name</label><input id="lfLast" name="last_name" type="text" autocomplete="family-name" placeholder="Smith" /></div>
           </div>
-          <div class="field" style="margin-bottom:12px;"><label>Work email</label><input type="email" placeholder="jane@healthplan.com" /></div>
-          <div class="field" style="margin-bottom:12px;"><label>Organization</label><input type="text" placeholder="Your health plan or clinic" /></div>
+          <div class="field" style="margin-bottom:12px;"><label for="lfEmail">Work email</label><input id="lfEmail" name="email" type="email" autocomplete="email" placeholder="jane@healthplan.com" /></div>
+          <div class="field" style="margin-bottom:12px;"><label for="lfOrg">Organization</label><input id="lfOrg" name="organization" type="text" autocomplete="organization" placeholder="Your health plan or clinic" /></div>
           <div class="field" style="margin-bottom:18px;">
-            <label>I'm interested in</label>
-            <select>
+            <label for="lfInterest">I'm interested in</label>
+            <select id="lfInterest" name="interest">
               <option>CMS-0057-F Readiness Assessment</option>
               <option>Sandbox access</option>
               <option>Compliance dashboard</option>
               <option>Full platform demo</option>
             </select>
           </div>
-          <button class="btn btn-primary form-submit" type="button">Request demo →</button>
+          <button class="btn btn-primary form-submit" type="button" id="lfSubmit">Request demo &rarr;</button>
+          <div class="form-status" id="lfStatus" role="status" aria-live="polite"></div>
           <div class="form-fine">No patient data is ever collected on this form.</div>
         </div>
       </div>
@@ -590,6 +596,55 @@
       if(f && e.data.fhirplugDemoHeight > 200){ f.style.height = (e.data.fhirplugDemoHeight + 24) + 'px'; }
     }
   });
+
+  // Contact form -> /demo-lead (stores the lead, pushes to HubSpot, emails the team).
+  // Business contact details only; the form asks for no patient data.
+  (function(){
+    var btn = document.getElementById('lfSubmit');
+    if(!btn) return;
+    var status = document.getElementById('lfStatus');
+    function say(msg, kind){
+      status.textContent = msg;
+      status.className = 'form-status show ' + (kind || '');
+    }
+    btn.addEventListener('click', function(){
+      var first = (document.getElementById('lfFirst').value || '').trim();
+      var last  = (document.getElementById('lfLast').value || '').trim();
+      var email = (document.getElementById('lfEmail').value || '').trim();
+      var org   = (document.getElementById('lfOrg').value || '').trim();
+      var interest = document.getElementById('lfInterest').value || '';
+
+      if(!first){ say('Please enter your first name.', 'err'); return; }
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ say('Please enter a valid work email address.', 'err'); return; }
+
+      btn.disabled = true;
+      say('Sending…');
+
+      fetch('/demo-lead', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          name: (first + ' ' + last).trim(),
+          email: email,
+          company: org,
+          phone: '',
+          role: '',
+          interest: interest,
+          source: 'Homepage - Request demo'
+        })
+      })
+      .then(function(r){ if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(){
+        say('Thanks — we’ve got it. Our team will be in touch shortly.', 'ok');
+        ['lfFirst','lfLast','lfEmail','lfOrg'].forEach(function(id){ document.getElementById(id).value = ''; });
+        btn.textContent = 'Request sent';
+      })
+      .catch(function(){
+        btn.disabled = false;
+        say('Sorry, that didn’t go through. Please try again in a moment.', 'err');
+      });
+    });
+  })();
 </script>
 </body>
 </html>
